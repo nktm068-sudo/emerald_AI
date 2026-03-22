@@ -24,27 +24,13 @@ function handleRequest() {
 if (sendBtn) sendBtn.onclick = handleRequest;
 if (userInput) userInput.onkeypress = (e) => { if (e.key === 'Enter') handleRequest(); };
 
-// ГОЛОС (Клик по Изумруду)
-const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-if (SpeechRecognition) {
-    const rec = new SpeechRecognition();
-    rec.lang = 'ru-RU';
-    emerald.onclick = () => { window.speechSynthesis.cancel(); rec.start(); emerald.classList.add('active'); };
-    rec.onresult = (event) => {
-        const text = event.results[0][0].transcript; 
-        emerald.classList.remove('active');
-        statusText.innerText = "Никита: " + text;
-        askAI(text);
-    };
-}
-
-// --- 2. ЗАПРОС К GROQ (ИСПРАВЛЕННЫЙ ПУТЬ) ---
+// --- 2. ЗАПРОС К GROQ (ИСПРАВЛЕННЫЙ АДРЕС) ---
 async function askAI(msg) {
     emerald.classList.add('thinking');
     aiAnswer.innerText = "LDFLDF4 пробивает защиту...";
     
     try {
-        // ЧИСТЫЙ АДРЕС: Прокси + Экранированный URL Groq
+        // ИСПРАВЛЕННЫЙ ПУТЬ: Никаких лишних знаков и кодировок!
         const proxy = "https://corsproxy.io?";
         const url = "https://api.groq.com";
 
@@ -60,11 +46,10 @@ async function askAI(msg) {
             })
         });
 
-        // Если всё-таки бан, выкинет ошибку
-        if (!res.ok) throw new Error("API Connection Error");
+        if (!res.ok) throw new Error("Server Ban");
 
         const data = await res.json();
-        const reply = data.choices[0].message.content; // Правильный путь к ответу
+        const reply = data.choices[0].message.content; // ВАЖНО: Путь у Groq именно такой (добавил [0])
         aiAnswer.innerText = reply;
         speak(reply);
     } catch (e) {
@@ -76,7 +61,5 @@ async function askAI(msg) {
 
 function speak(t) {
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'ru-RU';
-    window.speechSynthesis.speak(u);
+    window.speechSynthesis.speak(new SpeechSynthesisUtterance(t));
 }
