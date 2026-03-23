@@ -4,7 +4,7 @@ const aiAnswer = document.getElementById('ai-answer');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
-// --- ТВОЙ АТОМАРНЫЙ ЛДФЛДФ4 (КЛЮЧ GROQ) ---
+// --- ТВОЙ АТОМАРНЫЙ ЛДФЛДФ4 (GROQ) ---
 const p1 = "g"; const p2 = "s"; const p3 = "k"; const p4 = "_";
 const b1 = "0AdMg160ObuSWt9l";
 const b2 = "azpcWGdyb3FYnGnD";
@@ -29,10 +29,12 @@ async function askAI(msg) {
     aiAnswer.innerText = " пробивает защиту...";
     
     try {
-        const fullUrl = "https://corsproxy.io";
+            try {
+        // 1. Тот самый новый fullUrl (Прокси-официант AllOrigins)
+        const fullUrl = `https://api.allorigins.win{encodeURIComponent("https://api.groq.com")}`;
 
         const res = await fetch(fullUrl, {
-            method: "POST",
+            method: "POST", // Для AllOrigins внутри мы всё равно шлём POST
             headers: {
                 "Authorization": "Bearer " + LDFLDF4,
                 "Content-Type": "application/json"
@@ -45,15 +47,20 @@ async function askAI(msg) {
 
         if (!res.ok) throw new Error("Offline");
 
-        const data = await res.json();
-        // ВОТ ОНО, ЧИСТОЕ МЯСО (Добавил [0] и поправил путь):
-        const reply = data.choices.message.content; 
+        // 2. ОТКРЫВАЕМ МЯСО (AllOrigins пакует ответ в contents)
+        const responseData = await res.json();
+        const data = JSON.parse(responseData.contents); 
+        
+        // 3. ДОСТАЕМ САМ ОТВЕТ
+        const reply = data.choices[0].message.content; 
+        
         aiAnswer.innerText = reply;
         speak(reply);
 
     } catch (e) {
         aiAnswer.innerText = "Отсутствует подключение к серверу";
-    } finally {
+    }
+finally {
         emerald.classList.remove('thinking');
     }
 }
