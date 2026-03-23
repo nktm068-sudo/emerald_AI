@@ -4,12 +4,13 @@ const aiAnswer = document.getElementById('ai-answer');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
-// --- ТВОЙ АТОМАРНЫЙ ЛДФЛДФ4 (GROQ) ---
+// --- ТВОЙ АТОМАРНЫЙ ЛДФЛДФ4 (НОВЫЙ ЗАРЯД) ---
 const p1 = "g"; const p2 = "s"; const p3 = "k"; const p4 = "_";
-const b1 = "0AdMg160ObuSWt9l";
-const b2 = "azpcWGdyb3FYnGnD";
-const b3 = "RTOPDv9WXztFMPi6s9qI";
+const b1 = "WEvCP81fsMtgvCQcJf3h";
+const b2 = "WGdyb3FY93qrxWRpiYxJ";
+const b3 = "tK1TWKGLD7je";
 const LDFLDF4 = (p1+p2+p3+p4+b1+b2+b3).trim();
+
 
 // --- 1. ЛОГИКА ОТПРАВКИ ---
 function handleRequest() {
