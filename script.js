@@ -24,7 +24,7 @@ async function askAI(msg) {
     aiAnswer.innerText = "Связь с Облачным Штабом...";
     
     try {
-        // ТВОЯ НОВАЯ ОБЛАЧНАЯ ССЫЛКА (Прямое попадание в EmeraldCreator!)
+        // ТВОЯ НОВАЯ ОБЛАЧНАЯ ССЫЛКА (Прямое попадание!)
         const res = await fetch("https://emeraldcreator-emerald-plus-api.hf.space", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -35,10 +35,13 @@ async function askAI(msg) {
 
         const data = await res.json();
         
-        // Достаем чистое мясо из облачного ответа Groq
+        // Достаем чистое мясо (Reply) из ответа твоего сервера
         const reply = data.choices[0].message.content; 
         
         aiAnswer.innerText = reply;
+        
+        // Перед речью чистим старые звуки
+        window.speechSynthesis.cancel();
         speak(reply);
 
     } catch (e) {
@@ -51,18 +54,13 @@ async function askAI(msg) {
 // --- 3. УМНЫЙ ГОЛОС + ТИХИЙ РЕЖИМ (22:00 - 05:00) ---
 function speak(t) {
     const hour = new Date().getHours();
-    
-    // Ночной режим ниндзя: с 22:00 до 05:00
     if (hour >= 22 || hour < 5) {
         statusText.style.color = "DarkGreen"; 
         statusText.style.opacity = "1";
         statusText.innerText = "🌙 Режим ниндзя: ответ только текстом.";
         return; 
     }
-
-    // Днем надпись невидима (Призрак!)
     statusText.style.opacity = "0"; 
-
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t);
     u.lang = 'ru-RU';
