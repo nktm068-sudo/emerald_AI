@@ -26,7 +26,7 @@ if (userInput) userInput.onkeypress = (e) => { if (e.key === 'Enter') handleRequ
 // --- 2. ЗАПРОС К GROQ (БЕЗ ЛИШНИХ СКОБОК) ---
 async function askAI(msg) {
     emerald.classList.add('thinking');
-    aiAnswer.innerText = "LDFLDF4 пробивает защиту...";
+    aiAnswer.innerText = " пробивает защиту...";
     
     try {
         const fullUrl = "https://corsproxy.io";
@@ -47,7 +47,7 @@ async function askAI(msg) {
 
         const data = await res.json();
         // ВОТ ОНО, ЧИСТОЕ МЯСО (Добавил [0] и поправил путь):
-        const reply = data.choices[0].message.content; 
+        const reply = data.choices.message.content; 
         aiAnswer.innerText = reply;
         speak(reply);
 
