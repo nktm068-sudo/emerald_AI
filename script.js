@@ -30,7 +30,7 @@ async function askAI(msg) {
     
     try {
         const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
-        const fullUrl = "" https://corsproxy.io/?"+encodeURIComponent(apiUrl);" + encodeURIComponent(apiUrl);
+        const fullUrl = "https://corsproxy.io/?" + encodeURIComponent(apiUrl);"
 
         const res = await fetch(fullUrl, {
             method: "POST",
