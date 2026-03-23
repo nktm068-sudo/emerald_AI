@@ -64,11 +64,20 @@ async function askAI(msg) {
 function speak(t) {
     const hour = new Date().getHours();
     
-    // Если время от 22 вечера до 5 утра — режим ниндзя (молчание)
+    // Ночной режим: с 22:00 до 05:00
     if (hour >= 22 || hour < 5) {
         console.log("Режим тишины: Изумрудик не будит штаб.");
+        
+        // Показываем надпись: тёмно-зелёная и видимая (opacity: 1)
+        statusText.style.color = "DarkGreen"; 
+        statusText.style.opacity = "1";
+        statusText.innerText = "🌙 Режим ниндзя: ответ только текстом.";
         return; 
     }
+
+    // Дневной режим: делаем надпись ПОЛНОСТЬЮ ПРОЗРАЧНОЙ (opacity: 0)
+    statusText.style.opacity = "0"; 
+    statusText.style.color = ""; 
 
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t);
