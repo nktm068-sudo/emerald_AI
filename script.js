@@ -18,7 +18,7 @@ async function askAI(msg) {
     try {
         const proxy = "https://corsproxy.io?";
         // ВОТ ОН: Полный адрес до самой нейросети!
-        const url = "https://api.groq.com";
+        const url = "https://api.groq.com/openai/v1/chat/completions";
 
         const res = await fetch(proxy + encodeURIComponent(url), {
             method: "POST",
