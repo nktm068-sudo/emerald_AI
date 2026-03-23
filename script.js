@@ -11,8 +11,7 @@ const b2 = "WGdyb3FY93qrxWRpiYxJ";
 const b3 = "tK1TWKGLD7je";
 const LDFLDF4 = (p1+p2+p3+p4+b1+b2+b3).trim();
 
-
-// --- 1. ЛОГИКА ОТПРАВКИ ---
+// --- 1. ЛОГИКА ОТПРАВКИ (ТВОЁ УПРАВЛЕНИЕ) ---
 function handleRequest() {
     const text = userInput.value.trim();
     if (text) {
@@ -24,18 +23,17 @@ function handleRequest() {
 if (sendBtn) sendBtn.onclick = handleRequest;
 if (userInput) userInput.onkeypress = (e) => { if (e.key === 'Enter') handleRequest(); };
 
-// --- 2. ЗАПРОС К GROQ (БЕЗ ЛИШНИХ СКОБОК) ---
+// --- 2. ЗАПРОС К GROQ (ИСПРАВЛЕННЫЙ ТУННЕЛЬ) ---
 async function askAI(msg) {
     emerald.classList.add('thinking');
-    aiAnswer.innerText = " пробивает защиту...";
+    aiAnswer.innerText = "LDFLDF4 пробивает защиту...";
     
     try {
-            try {
-        // 1. Тот самый новый fullUrl (Прокси-официант AllOrigins)
-        const fullUrl = `https://api.allorigins.win{encodeURIComponent("https://api.groq.com")}`;
+        const apiUrl = "https://api.groq.com";
+        const fullUrl = `https://api.allorigins.win{encodeURIComponent(apiUrl)}`;
 
         const res = await fetch(fullUrl, {
-            method: "POST", // Для AllOrigins внутри мы всё равно шлём POST
+            method: "POST",
             headers: {
                 "Authorization": "Bearer " + LDFLDF4,
                 "Content-Type": "application/json"
@@ -48,11 +46,8 @@ async function askAI(msg) {
 
         if (!res.ok) throw new Error("Offline");
 
-        // 2. ОТКРЫВАЕМ МЯСО (AllOrigins пакует ответ в contents)
         const responseData = await res.json();
         const data = JSON.parse(responseData.contents); 
-        
-        // 3. ДОСТАЕМ САМ ОТВЕТ
         const reply = data.choices[0].message.content; 
         
         aiAnswer.innerText = reply;
@@ -60,14 +55,21 @@ async function askAI(msg) {
 
     } catch (e) {
         aiAnswer.innerText = "Отсутствует подключение к серверу";
-    }
-finally {
+    } finally {
         emerald.classList.remove('thinking');
     }
 }
 
-// --- 3. УМНЫЙ ГОЛОС ---
+// --- 3. УМНЫЙ ГОЛОС + ТИХИЙ РЕЖИМ (22:00 - 05:00) ---
 function speak(t) {
+    const hour = new Date().getHours();
+    
+    // Если время от 22 вечера до 5 утра — режим ниндзя (молчание)
+    if (hour >= 22 || hour < 5) {
+        console.log("Режим тишины: Изумрудик не будит штаб.");
+        return; 
+    }
+
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(t);
     u.lang = 'ru-RU';
