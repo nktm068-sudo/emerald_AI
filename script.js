@@ -48,6 +48,34 @@ async function askAI(msg) {
     }
 }
 
-// Логика кнопок
-sendBtn.onclick = () => { if(userInput.value) { askAI(userInput.value); userInput.value=""; } };
-userInput.onkeypress = (e) => { if(e.key === 'Enter' && userInput.value) { askAI(userInput.value); userInput.value=""; } };
+// --- 4. ЛОГИКА КНОПОК ---
+sendBtn.onclick = () => { 
+    if(userInput.value.trim()) { askAI(userInput.value); userInput.value=""; } 
+};
+
+userInput.onkeypress = (e) => { 
+    if(e.key === 'Enter' && userInput.value.trim()) { askAI(userInput.value); userInput.value=""; } 
+};
+
+// --- 5. УМНЫЙ ГОЛОС (АДАПТИРУЕТСЯ ПОД УСТРОЙСТВО) ---
+function speak(t) {
+    // Останавливаем старую речь
+    window.speechSynthesis.cancel();
+    
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = 'ru-RU'; // Ставим русский язык
+
+       // Ищем лучший голос на твоём устройстве
+    const voices = window.speechSynthesis.getVoices();
+    const russianVoice = voices.find(v => v.lang.startsWith('ru'));
+    
+    if (russianVoice) {
+        u.voice = russianVoice;
+    }
+
+    u.pitch = 1.1; // Дружелюбный тон
+    u.rate = 1.0;  // Твоя идеальная скорость (нормальная)
+    
+    // МАГИЯ: Запуск голоса!
+    window.speechSynthesis.speak(u);
+}
