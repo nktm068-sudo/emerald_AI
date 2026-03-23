@@ -54,20 +54,38 @@ async function askAI(msg) {
 // --- 3. УМНЫЙ ГОЛОС + ТИХИЙ РЕЖИМ (22:00 - 05:00) ---
 function speak(t) {
     const hour = new Date().getHours();
+    
+    // 1. Режим ниндзя (с 22:00)
     if (hour >= 22 || hour < 5) {
         statusText.style.color = "DarkGreen"; 
         statusText.style.opacity = "1";
         statusText.innerText = "🌙 Режим ниндзя: ответ только текстом.";
         return; 
     }
+
     statusText.style.opacity = "0"; 
-    window.speechSynthesis.cancel();
+
+    // 2. ЯДЕРНЫЙ ЗАПУСК ПАВЛА
+    window.speechSynthesis.cancel(); // Сбрасываем старые зависшие звуки
+    
     const u = new SpeechSynthesisUtterance(t);
     u.lang = 'ru-RU';
+    
+    // Ищем именно Павла (стандарт Windows)
     const voices = window.speechSynthesis.getVoices();
-    const russianVoice = voices.find(v => v.lang.startsWith('ru'));
-    if (russianVoice) u.voice = russianVoice;
-    u.pitch = 1.1; 
+    const pavel = voices.find(v => v.name.includes('Pavel') || v.name.includes('Microsoft Pavel'));
+    const russian = voices.find(v => v.lang.startsWith('ru'));
+    
+    u.voice = pavel || russian; // Если Павла нет, возьмет любого русского
+    u.pitch = 1.0; 
     u.rate = 1.0;  
+    
     window.speechSynthesis.speak(u);
 }
+
+// СЕКРЕТНЫЙ ХАК ДЛЯ ХРОМА: Разрешаем звук при первом клике
+document.body.addEventListener('click', () => {
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    }
+}, { once: true });
