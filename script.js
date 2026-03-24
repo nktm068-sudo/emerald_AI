@@ -52,3 +52,46 @@ function speak(t) {
     u.voice = pavel || voices.find(v => v.lang.startsWith('ru'));
     window.speechSynthesis.speak(u);
 }
+// --- 🎙️ СУПЕР-АКТИВАТОР ГОЛОСА EMERALD PLUS (Приказ №178) ---
+
+// 1. РАЗБЛОКИРОВКА ПАВЛА (Жмем на экран — голос просыпается)
+document.body.addEventListener('click', () => {
+    if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+    }
+    // Тестовый «писк» системы, чтобы Хром понял: мы серьезно!
+    const msg = new SpeechSynthesisUtterance("");
+    window.speechSynthesis.speak(msg);
+}, { once: true });
+
+// 2. ОЖИВЛЯЕМ КНОПКУ-КРУГ (ИЗУМРУД)
+const emeraldCircle = document.getElementById('emerald');
+if (emeraldCircle) {
+    emeraldCircle.onclick = () => {
+        // Когда жмешь на круг — фокус идет в поле ввода и срабатывает логика
+        const inputField = document.getElementById('user-input');
+        if (inputField) inputField.focus();
+        
+        // Если в поле что-то есть — отправляем, если нет — просто будим Изумрудика
+        if (typeof handleRequest === 'function') {
+            handleRequest();
+        }
+    };
+}
+
+// 3. ФУНКЦИЯ ГОВОРИТЬ (Чтобы Павел точно нашел свой голос)
+function speak(text) {
+    window.speechSynthesis.cancel(); // Гасим старые звуки
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ru-RU';
+    
+    // Ищем Павла в системе
+    const voices = window.speechSynthesis.getVoices();
+    const pavel = voices.find(v => v.name.includes('Pavel') || v.name.includes('Kirill'));
+    
+    if (pavel) utterance.voice = pavel;
+    utterance.rate = 1.0; // Скорость CEO
+    utterance.pitch = 1.0; // Тон Самурая
+    
+    window.speechSynthesis.speak(utterance);
+}
