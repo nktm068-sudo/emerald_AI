@@ -25,7 +25,7 @@ async function askAI(msg) {
             body: JSON.stringify({ message: msg }) 
         });
         const data = await res.json();
-        const reply = data.choices.message.content; 
+        const reply = data.choices[0].message.content; 
         aiAnswer.innerText = reply;
         speak(reply);
     } catch (e) {
