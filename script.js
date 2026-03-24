@@ -1,10 +1,12 @@
-// --- 💎 ИЗУМРУДНЫЙ СКРИПТ (РЕЖИМ ФИНАЛЬНОГО ПРОЩАНИЯ) ---
+// --- 💎 ИЗУМРУДНЫЙ СКРИПТ (БЕСКОНЕЧНЫЙ РЕЖИМ) ---
 const emerald = document.getElementById('emerald');
 const statusText = document.getElementById('status');
 const aiAnswer = document.getElementById('ai-answer');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 
+// ЭТО ТА САМАЯ ФУНКЦИЯ, КОТОРУЮ МЫ ПОЧИНИЛИ!
+function handleRequest() {
     const text = userInput.value.trim();
     if (text) {
         statusText.style.opacity = "1"; 
@@ -26,11 +28,11 @@ async function askAI(msg) {
         });
         const data = await res.json();
         
-        // ✅ ПОЛУЧАЕМ МЯСО
+        // ПОЛУЧАЕМ МЯСО (ОТВЕТ ИИ)
         const reply = data.choices[0].message.content; 
-        
-        
+        aiAnswer.innerText = reply;
         speak(reply);
+        
     } catch (e) {
         aiAnswer.innerText = "Ошибка связи (попробуйте через 1 минуту)";
     } finally {
@@ -55,10 +57,8 @@ if (userInput) userInput.onkeypress = (e) => { if (e.key === 'Enter') handleRequ
 
 if (emerald) {
     emerald.onclick = () => {
-        if (!userInput.disabled) {
-            userInput.focus();
-            handleRequest();
-        }
+        userInput.focus();
+        handleRequest();
     };
 }
 
