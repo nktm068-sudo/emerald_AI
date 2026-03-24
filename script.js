@@ -9,7 +9,7 @@ function handleRequest() {
     const text = userInput.value.trim();
     if (text) {
         statusText.style.opacity = "1"; 
-        statusText.innerText = "Никита: " + text;
+        statusText.innerText = " " + text;
         askAI(text);
         userInput.value = ""; 
     }
