@@ -36,11 +36,15 @@ if (emerald) {
         izumrudiki += clickPower;
         updateUI();
 
-        // 2. ✨ МЯГКОЕ СВЕЧЕНИЕ (Безопасно!)
+                // 🟢 2. ПЛАВНОЕ СВЕЧЕНИЕ (Затухает медленно)
+        emerald.style.transition = "filter 0.1s"; // Вспышка быстрая
         emerald.style.filter = "drop-shadow(0 0 50px #00ff00)";
+
         setTimeout(() => {
+            emerald.style.transition = "filter 1.5s ease-out"; // Затухание 1.5 сек!
             emerald.style.filter = "drop-shadow(0 0 20px #00ff00)";
         }, 100);
+
 
         // 3. Тряска
         emerald.style.transform = "scale(0.95)";
