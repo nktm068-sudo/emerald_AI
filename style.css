@@ -12,6 +12,10 @@ body {
     box-shadow: 0 0 35px rgba(80, 200, 120, 0.4);
     border: 3px solid rgba(255, 255, 255, 0.1);
 }
+#emerald {
+    /* ... твои стили ... */
+    transition: filter 1s ease-out, transform 0.1s; /* ⏱️ МАГИЯ ПЛАВНОСТИ ТУТ! */
+}
 
 #emerald.active { animation: pulse 1s infinite alternate; border-color: #fff; }
 #emerald.thinking { animation: rotate 2s linear infinite; filter: hue-rotate(150deg); }
