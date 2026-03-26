@@ -1,73 +1,68 @@
-// --- 💎 ИЗУМРУДНЫЙ СКРИПТ (БЕСКОНЕЧНЫЙ РЕЖИМ 5.5) ---
+// --- 💎 ИЗУМРУДНЫЙ КЛИКЕР 9.4 (SILENT CLOUD) ---
 const emerald = document.getElementById('emerald');
 const statusText = document.getElementById('status');
 const aiAnswer = document.getElementById('ai-answer');
-const userInput = document.getElementById('user-input');
-const sendBtn = document.getElementById('send-btn');
-// --- 👋 ПРИВЕТСТВИЕ ПРИ ЗАПУСКЕ ---
+
+// 🔢 ПЕРЕМЕННЫЕ
+let izumrudiki = 0;
+let clickPower = 1;
+
+// --- ☁️ СИНХРОНИЗАЦИЯ С ОБЛАКОМ ---
+async function syncWithServer() {
+    try {
+        const res = await fetch("https://nktm068-sudo-serverjs-emeraldcr.hf.space");
+        const data = await res.json();
+        izumrudiki = data.score || 0;
+        clickPower = data.power || 1;
+        updateUI();
+    } catch (e) {
+        console.log("Cloud connection error");
+    }
+}
+
+// --- 👋 ЗАПУСК ПРИ ЗАГРУЗКЕ ---
 window.addEventListener('load', () => {
-    const hello = "Изумрудик на связи!";
-    aiAnswer.innerText = hello;
-    speak(hello);
+    syncWithServer(); // Сразу лезем в облако
+    aiAnswer.innerText = "Система Активна."; // Кратко и по делу
 });
 
-function handleRequest() {
-    const text = userInput.value.trim();
-    if (text) {
-        statusText.style.opacity = "1"; 
-        statusText.innerText = "Пользователь: " + text;
-        askAI(text);
-        userInput.value = ""; 
-    }
+function updateUI() {
+    // Твой фирменный стиль "Пользователь + число"
+    statusText.innerText = "Пользователь " + izumrudiki + " (Сила: x" + clickPower + ")";
+    statusText.style.opacity = "1";
 }
 
-async function askAI(msg) {
-    emerald.classList.add('thinking');
-    aiAnswer.innerText = "Связь с Облачным Штабом...";
-    try {
-        const res = await fetch("https://emeraldcreator-emerald-plus-api.hf.space", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: msg }) 
-        });
-        const data = await res.json();
-        const reply = data.choices[0].message.content; 
-        aiAnswer.innerText = reply;
-        speak(reply);
-    } catch (e) {
-        aiAnswer.innerText = "Ошибка связи (попробуйте через 1 минуту)";
-    } finally {
-        emerald.classList.remove('thinking');
-    }
-}
-
-function speak(t) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'ru-RU';
-    const voices = window.speechSynthesis.getVoices();
-    const pavel = voices.find(v => v.name.includes('Pavel') || v.name.includes('Kirill'));
-    u.voice = pavel || voices.find(v => v.lang.startsWith('ru'));
-    window.speechSynthesis.speak(u);
-}
-
-if (sendBtn) sendBtn.onclick = handleRequest;
-if (userInput) userInput.onkeypress = (e) => { if (e.key === 'Enter') handleRequest(); };
-
+// --- 🖱️ ЛОГИКА ГИПЕР-КЛИКА ---
 if (emerald) {
-    emerald.onclick = () => {
-        userInput.focus();
-        handleRequest();
+    emerald.onclick = async () => {
+        // 1. Прибавляем изумруды
+        izumrudiki += clickPower;
+        updateUI();
+
+        // 2. Вспышка экрана (Зеленая)
+        document.body.style.backgroundColor = (clickPower > 1) ? "#94ff94" : "#ccffcc"; 
+        setTimeout(() => document.body.style.backgroundColor = "#000000", 60);
+
+        // 3. Эффект нажатия
+        emerald.style.transform = "scale(0.95)";
+        setTimeout(() => emerald.style.transform = "scale(1)", 50);
+
+        // 4. МАГАЗИН: Авто-покупка X2 за 200 изумрудов
+        if (izumrudiki >= 200 && clickPower === 1) {
+            izumrudiki -= 200;
+            clickPower = 2;
+            aiAnswer.innerText = "Upgrade: x2 Active";
+        }
+
+        // 5. СОХРАНЕНИЕ В ОБЛАКО
+        try {
+            await fetch("https://nktm068-sudo-serverjs-emeraldcr.hf.space", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ score: izumrudiki, power: clickPower })
+            });
+        } catch (e) {
+            console.log("Save error");
+        }
     };
 }
-
-document.body.addEventListener('click', () => {
-    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-}, { once: true });
-// --- 📱 МАГИЯ PWA (УСТАНОВКА НА ТЕЛЕФОН) ---
-let installPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    installPrompt = e;
-    console.log("💎 Изумрудик готов к установке!");
-});
